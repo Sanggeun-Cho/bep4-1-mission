@@ -8,29 +8,27 @@ import com.back.shared.post.dto.PostDto;
 import com.back.shared.post.event.PostCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PostService {
+public class PostFacade {
     private final PostRepository postRepository;
-    private final EventPublisher eventPublisher;
+    private final PostWriteUseCase postWriteUseCase;
 
+    @Transactional(readOnly = true)
     public long count() {
         return postRepository.count();
     }
 
+    @Transactional(readOnly = true)
     public Post write(Member author, String title, String content) {
-        Post post = postRepository.save(new Post(author, title, content));
-
-        // 게시글을 적으면 활동 점수 3점 추가
-        // author.increaseActivityScore(3);
-        eventPublisher.publish(new PostCreatedEvent(new PostDto(post)));
-
-        return post;
+        return postWriteUseCase.write(author, title, content);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Post> findById(int id) {
         return postRepository.findById(id);
     }
