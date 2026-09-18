@@ -18,6 +18,7 @@ public class Member extends SourceMember {
     }
 
     public int increaseActivityScore(int amount) {
+        // 0점일 때에는 굳이 이벤트를 발행하지 않음
         if(amount == 0) return getActivityScore();
 
         setActivityScore(getActivityScore() + amount);
