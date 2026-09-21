@@ -15,43 +15,32 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostFacade {
-    private final PostRepository postRepository;
-    private final PostMemberRepository postMemberRepository;
+    private final PostSupport postSupport;
+    private final PostSyncMemberUseCase postSyncMemberUseCase;
     private final PostWriteUseCase postWriteUseCase;
 
-    @Transactional(readOnly = true)
-    public long count() {
-        return postRepository.count();
+    @Transactional
+    public PostMember syncMember(MemberDto member){
+        return postSyncMemberUseCase.syncMember(member);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public RsData<Post> write(PostMember author, String title, String content) {
         return postWriteUseCase.write(author, title, content);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Post> findById(int id) {
-        return postRepository.findById(id);
+    public long count() {
+        return postSupport.count();
     }
 
-    @Transactional
-    public PostMember syncMember(MemberDto member) {
-        // 비밀번호는 비워둘 것
-        PostMember _member = new PostMember(
-                member.getId(),
-                member.getCreateDate(),
-                member.getModifyDate(),
-                member.getUsername(),
-                "",
-                member.getNickname(),
-                member.getActivityScore()
-        );
-
-        return postMemberRepository.save(_member);
+    @Transactional(readOnly = true)
+    public Optional<Post> findById(int id) {
+        return postSupport.findById(id);
     }
 
     @Transactional(readOnly = true)
     public Optional<PostMember> findMemberByUsername(String username) {
-        return postMemberRepository.findByUsername(username);
+        return postSupport.findMemberByUsername(username);
     }
 }
