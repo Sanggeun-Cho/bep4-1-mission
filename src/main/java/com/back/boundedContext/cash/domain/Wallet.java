@@ -43,11 +43,11 @@ public class Wallet extends BaseManualIdAndTime {
     }
 
     public void credit(long amount, CashLog.EventType eventType) {
-        debit(amount, eventType, holder);
+        credit(amount, eventType, holder);
     }
 
     public void debit(long amount, CashLog.EventType eventType, String relTypeCode, int relId) {
-        balance += amount;
+        balance -= amount;
 
         addCashLog(amount, eventType, relTypeCode, relId);
     }
