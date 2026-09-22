@@ -41,4 +41,5 @@ db_dev.mv.db
 db_dev.trace.db
 .env
 STUDY_NOTES_PART1.md
+STUDY_NOTES_PART2.md
 *.svg
